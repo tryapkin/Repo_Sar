@@ -14,7 +14,7 @@ def channel(ox,n,title,led0):
     ln(ox+140,RAIL,ox+140,150); dot(ox+140,RAIL); dot(ox+140,105)
     # Rs
     ln(ox+140,105,ox+170,105); S.append(f'<rect x="{ox+170}" y="97" width="40" height="16" fill="none" stroke="#111" stroke-width="2"/>')
-    ln(ox+210,105,ox+240,105); ln(ox+240,105,ox+240,150); dot(ox+240,105); tx(ox+190,90,"Rs",13,"middle")
+    ln(ox+210,105,ox+240,105); ln(ox+240,105,ox+240,150); dot(ox+240,105); tx(ox+190,90,"Rs 0,15",12,"middle")
     # IC
     S.append(f'<rect x="{ox+120}" y="150" width="140" height="100" fill="#f3f6fb" stroke="#111" stroke-width="2"/>')
     tx(ox+190,205,"PT4115",15,"middle",True); tx(ox+190,223,"U",12,"middle")
@@ -38,17 +38,18 @@ def channel(ox,n,title,led0):
     ln(ox+270,215,ox+270,285); ln(ox+270,285,ox+420,285); ln(ox+420,285,ox+420,200)
     S.append(f'<polygon points="{ox+410},200 {ox+430},200 {ox+420},182" fill="#fff" stroke="#111" stroke-width="2"/>')
     ln(ox+410,182,ox+430,182); ln(ox+420,182,ox+420,RAIL); dot(ox+420,RAIL); tx(ox+434,195,"D (Шоттки)",12)
-channel(0,3,"Канал A: LED1–LED3 (3 посл., ≈9,5 В)",1)
-channel(540,2,"Канал B: LED4–LED5 (2 посл., ≈6,3 В)",4)
+channel(0,3,"Канал A: LED1–LED3 (3 посл., ≈10 В)",1)
+channel(540,2,"Канал B: LED4–LED5 (2 посл., ≈6,6 В)",4)
 ln(30,RAIL,960,RAIL); ln(30,GND,740,GND)
 for (x,y,t) in [(30,RAIL,"+12 В"),(30,GND,"GND")]:
     S.append(f'<circle cx="{x}" cy="{y}" r="5" fill="#fff" stroke="#111" stroke-width="2"/>'); tx(x-6,y+5,t,14,"end",True)
 tx(30,22,"Светильник: 5× OSRAM OSLON, питание 12 В DC",19,b=True)
-notes=["Почему так: 5 LED по ≈3,1 В в одну цепочку = 15,5 В > 12 В; резистор на каждый LED греет ≈15 Вт. Две цепочки (3+2) с драйвером тока — КПД ≈90%.",
-"Ток: Rs = 0,1 В / I → Rs = 0,30 Ом ⇒ ≈333 мА на цепочку. LED: ≈1 Вт каждый, всего ≈5,2 Вт; от 12 В потребление ≈0,5 А.",
-"Перечень: LED1–5 OSRAM OSLON белый (≈3,0–3,2 В @350 мА); U ×2 PT4115 (Vin 6–30 В, до 1,2 А); Rs ×2 0,30 Ом 1% 1206;",
-"L ×2 47 мкГн (Isat ≥ 0,8 А); D ×2 SS14/SS34; Cin ×2 4,7 мкФ 50 В X7R + 100 мкФ 25 В на входе платы; DIM — NC (100%) или ШИМ.",
-"Плата — алюминиевая (MCPCB), светодиоды на термопрокладку. Значения подобраны по памяти: тип OSLON, Vf и параметры PT4115 сверьте с даташитами."]
+notes=["Почему так: 5 LED по ≈3,3 В в одну цепочку = 16,5 В > 12 В; резистор на каждый LED греет ≈30 Вт. Две цепочки (3+2) с драйвером тока — КПД ≈90%.",
+"Ток: Rs = 0,1 В / I → Rs = 0,15 Ом ⇒ ≈667 мА (цель 700 мА). LED ≈2,3 Вт каждый, всего ≈11,5 Вт; от 12 В потребление ≈1,1 А.",
+"Внимание: цепочка A ≈10 В от 12 В — запас мал. Питание держать 12–13,8 В и проверить на макете; запасной вариант — каналы 2+2+1.",
+"Перечень: LED1–5 OSRAM OSLON белый (≈3,2–3,4 В @700 мА); U ×2 PT4115 (до 1,2 А); Rs ×2 0,15 Ом 1% 1206; L ×2 33–47 мкГн (Isat ≥ 1,5 А);",
+"D ×2 SS24/SS34 (2–3 А, 40 В); Cin ×2 10 мкФ 25–50 В X7R + 220 мкФ 25 В на входе; DIM — NC (100%) или ШИМ. Плата — алюминиевая (MCPCB) на радиатор.",
+"Значения подобраны по памяти: тип OSLON, Vf, параметры PT4115 и номиналы L/D сверьте с даташитами и расчётом."]
 for i,t in enumerate(notes): tx(30,385+24*i,t,13)
 svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="540" viewBox="0 0 1160 540" font-family="Liberation Sans, Arial, sans-serif"><rect width="1160" height="540" fill="#fff"/><g transform="translate(60,0)">'+"".join(S)+'</g></svg>'
 open('lamp_schematic.svg','w',encoding='utf-8').write(svg)
